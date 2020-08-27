@@ -43,8 +43,6 @@ then
     echo "NPU Enable"
     # set c++ shared
     STL="c++_shared"
-    # set android API
-    ANDROID_API_LEVEL="android-19"
     #start to cp
     if [ ! -d $TNN_BUILD_PATH/../third_party/npu/cpp_lib/ ]; then
          mkdir -p $TNN_BUILD_PATH/../third_party/npu/cpp_lib/

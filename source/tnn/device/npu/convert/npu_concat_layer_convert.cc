@@ -29,13 +29,14 @@ Status NpuConcatLayer::Convert() {
     }
     int axis = param->axis;
 
-    auto output = std::make_shared<ge::op::Concat>(outputs_name_[0]);
+    auto output = std::make_shared<hiai::op::ConcatD>(outputs_name_[0]);
     // multiple input
     output->create_dynamic_input_x(input_size);
     for (int i = 1; i < input_size + 1; i++) {
         output->set_dynamic_input_x(i, *(input_ops_[i - 1]->GetOperator()));
     }
-    output->set_attr_axis(axis);
+    output->set_attr_concat_dim(axis);
+    output->set_attr_N(input_size);
     ADD_OUTPUT_OP(output)
 }
 

@@ -26,7 +26,7 @@ public:
 
 protected:
     Status Convert() {
-        return NpuBinaryLayer::BinaryConvert<ge::op::Minimum>();
+        return NpuBinaryLayer::BinaryConvert<hiai::op::Minimum>();
     }
 };
 

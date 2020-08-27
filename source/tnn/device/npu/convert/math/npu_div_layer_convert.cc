@@ -26,7 +26,7 @@ public:
 
 protected:
     Status Convert() {
-        return NpuBinaryLayer::BinaryConvert<ge::op::RealDiv>();
+        return NpuBinaryLayer::BinaryConvert<hiai::op::RealDiv>();
     }
 };
 

@@ -22,7 +22,8 @@
 #include <vector>
 
 #include "graph/attr_value.h"
-#include "graph/op/nn_defs.h"
+#include "graph/op/all_ops.h"
+#include "graph/compatible/all_ops.h"
 #include "tnn/core/abstract_device.h"
 #include "tnn/core/blob.h"
 #include "tnn/core/context.h"

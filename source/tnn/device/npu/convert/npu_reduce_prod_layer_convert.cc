@@ -15,9 +15,7 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the
 // specific language governing permissions and limitations under the License.
 
-#include <graph/op/all_ops.h>
 #include "graph/attr_value.h"
-#include "graph/op/nn_defs.h"
 #include "npu_base_layer_convert.h"
 #include "npu_utils.h"
 
@@ -49,7 +47,7 @@ Status NpuReduceProdLayer::Convert() {
 
     std::vector<int64_t> axes(axes_32.begin(), axes_32.end());
 
-    auto output = std::make_shared<ge::op::ReduceProd>(outputs_name_[0]);
+    auto output = std::make_shared<hiai::op::ReduceProdD>(outputs_name_[0]);
     output->set_input_x(*input_ops_[0]->GetOperator());
     output->set_attr_axes(axes);
     output->set_attr_keep_dims(param->keep_dims);

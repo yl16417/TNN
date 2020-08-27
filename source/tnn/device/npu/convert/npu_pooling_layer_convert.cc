@@ -13,7 +13,7 @@
 // specific language governing permissions and limitations under the License.
 
 #include "graph/attr_value.h"
-#include "graph/op/nn_defs.h"
+#include "graph/op/all_ops.h"
 #include "npu_base_layer_convert.h"
 #include "npu_utils.h"
 
@@ -45,7 +45,7 @@ Status NpuPoolLayer::Convert() {
     int kernel_w    = param->kernels[0];
     int kernel_h    = param->kernels[1];
 
-    auto output = std::make_shared<ge::op::Pooling>(outputs_name_[0]);
+    auto output = std::make_shared<hiai::op::PoolingD>(outputs_name_[0]);
     output->set_input_x(*input_ops_[0]->GetOperator());
     output->set_attr_mode(pool_mode);
     if (kernel_h == 0 || kernel_w == 0) {

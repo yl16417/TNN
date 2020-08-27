@@ -12,7 +12,6 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the
 // specific language governing permissions and limitations under the License.
 
-#include <graph/op/all_ops.h>
 #include "npu_binary_layer_convert.h"
 #include "tnn/device/npu/convert/npu_base_layer_convert.h"
 #include "tnn/device/npu/convert/npu_utils.h"
@@ -24,7 +23,7 @@ public:
     NpuSubLayer(LayerType ignore) : NpuBinaryLayer(LAYER_SUB) {}
     ~NpuSubLayer() {}
     Status Convert() {
-        return NpuBinaryLayer::BinaryConvert<ge::op::Sub>();
+        return NpuBinaryLayer::BinaryConvert<hiai::op::Sub>();
     }
 };
 

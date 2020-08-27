@@ -53,9 +53,9 @@ Status NpuReduceSumLayer::Convert() {
     NpuUtils::CreateAttrArray(axes_op, axes, desc, reduce_size);
     weight_ops_.push_back(axes_op);
 
-    auto output = std::make_shared<ge::op::ReduceSum>(outputs_name_[0]);
+    auto output = std::make_shared<hiai::op::ReduceSum>(outputs_name_[0]);
     output->set_input_x(*input_ops_[0]->GetOperator());
-    output->set_input_w(*axes_op);
+    output->set_input_axes(*axes_op);
     output->set_attr_keep_dims(param->keep_dims);
     ADD_OUTPUT_OP(output)
 }

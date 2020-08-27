@@ -26,7 +26,7 @@ public:
 
 protected:
     Status Convert() {
-        return NpuUnaryLayer::UnaryConvert<ge::op::Asin>();
+        return NpuUnaryLayer::UnaryConvert<hiai::op::Asin>();
     }
 };
 

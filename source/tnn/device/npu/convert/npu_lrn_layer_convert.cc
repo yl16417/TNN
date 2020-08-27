@@ -31,12 +31,12 @@ Status NpuLRNLayer::Convert() {
     float bias  = param->bias;
     int size    = param->size;
 
-    auto output = std::make_shared<ge::op::LRN>(outputs_name_[0]);
+    auto output = std::make_shared<hiai::op::LRN>(outputs_name_[0]);
     output->set_input_x(*input_ops_[0]->GetOperator());
-    output->set_attr_lrn_localsize(size);
-    output->set_attr_lrn_alpha(alpha);
-    output->set_attr_lrn_beta(beta);
-    output->set_attr_lrn_k(bias);
+    output->set_attr_depth_radius(size);
+    output->set_attr_alpha(alpha);
+    output->set_attr_beta(beta);
+    output->set_attr_bias(bias);
 
     ADD_OUTPUT_OP(output)
 }

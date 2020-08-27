@@ -26,7 +26,7 @@ public:
 
 protected:
     Status Convert() {
-        return NpuUnaryLayer::UnaryConvert<ge::op::Floor>();
+        return NpuUnaryLayer::UnaryConvert<hiai::op::Floor>();
     }
 };
 

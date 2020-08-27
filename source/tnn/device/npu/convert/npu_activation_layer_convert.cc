@@ -12,7 +12,6 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the
 // specific language governing permissions and limitations under the License.
 
-#include "graph/op/nn_defs.h"
 #include "npu_base_layer_convert.h"
 #include "npu_utils.h"
 #include "tnn/core/layer_type.h"
@@ -26,7 +25,7 @@ class NpuActivationLayerConvert : public NpuBaseLayer {
 protected:
     int mode = 0;
     virtual Status Convert() {
-        auto output = std::make_shared<ge::op::Activation>(outputs_name_[0]);
+        auto output = std::make_shared<hiai::op::Activation>(outputs_name_[0]);
         output->set_input_x(*input_ops_[0]->GetOperator());
 
         switch (type_) {

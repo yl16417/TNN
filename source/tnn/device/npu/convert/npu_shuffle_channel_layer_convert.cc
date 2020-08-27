@@ -25,7 +25,7 @@ Status NpuShuffleChannelLayer::Convert() {
     auto param = dynamic_cast<ShuffleLayerParam *>(param_);
     CHECK_PARAM_NULL(param);
 
-    auto output = std::make_shared<ge::op::ShuffleChannel>(outputs_name_[0]);
+    auto output = std::make_shared<hiai::op::ShuffleChannel>(outputs_name_[0]);
     output->set_input_x(*input_ops_[0]->GetOperator());
     output->set_attr_group(param->group);
     ADD_OUTPUT_OP(output)

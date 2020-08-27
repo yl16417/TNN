@@ -1,0 +1,55 @@
+//// Tencent is pleased to support the open source community by making TNN available.
+////
+//// Copyright (C) 2020 THL A29 Limited, a Tencent company. All rights reserved.
+////
+//// Licensed under the BSD 3-Clause License (the "License"); you may not use this file except
+//// in compliance with the License. You may obtain a copy of the License at
+////
+//// https://opensource.org/licenses/BSD-3-Clause
+////
+//// Unless required by applicable law or agreed to in writing, software distributed
+//// under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+//// CONDITIONS OF ANY KIND, either express or implied. See the License for the
+//// specific language governing permissions and limitations under the License.
+//
+//#include "graph/attr_value.h"
+//#include "graph/op/nn_defs.h"
+//#include "npu_base_layer_convert.h"
+//#include "npu_utils.h"
+//
+//namespace TNN_NS {
+//
+//DECLARE_NPU_LAYER(PriorBox, LAYER_PRIOR_BOX)
+//
+//Status NpuPriorBoxLayer::Convert() {
+//    LOGI("I AM IN PRITOR BOX\n");
+//    // parameter and weight of the PriorBox layer
+//    auto param = dynamic_cast<PriorBoxLayerParam *>(param_);
+//    CHECK_PARAM_NULL(param);
+//
+//    auto output = std::make_shared<ge::op::PriorBox>(outputs_name_[0]);
+//    output->set_input_x(*input_ops_[0]->GetOperator());
+//    output->set_attr_min_size(param->min_sizes);
+//    output->set_attr_max_size(param->max_sizes);
+//    output->set_attr_min_size_num(param->min_sizes.size());
+//    output->set_attr_max_size_num(param->max_sizes.size());
+//    output->set_attr_aspect_ratio(param->aspect_ratios);
+//    output->set_attr_aspect_ratio_num(param->aspect_ratios.size());
+//
+//    output->set_attr_flip(param->flip);
+//    output->set_attr_clip(param->clip);
+//
+//    output->set_attr_step_h(param->step_h);
+//    output->set_attr_step_w(param->step_w);
+//    output->set_attr_offset(param->offset);
+//    output->set_attr_img_h(param->img_h);
+//    output->set_attr_img_w(param->img_w);
+//
+//    output->set_attr_variance(param->variances);
+//    output->set_attr_variance_num(param->variances.size());
+//    ADD_OUTPUT_OP(output)
+//}
+//
+//REGISTER_NPU_LAYER(PriorBox, LAYER_PRIOR_BOX)
+//
+//}  // namespace TNN_NS

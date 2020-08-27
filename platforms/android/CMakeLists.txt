@@ -29,6 +29,7 @@ endif()
 
 if(TNN_NPU_ENABLE)
     message(STATUS "Build TNN NPU")
-    target_link_libraries(TNN hiai hiai_ir hiai_ir_build hcl)
+#    target_link_libraries(TNN hiai hiai_ir hiai_ir_build hcl)
+    target_link_libraries(TNN hiai hiai_ir hiai_ir_build)
     include_directories(${PROJECT_SOURCE_DIR}/source/tnn/device/npu)
 endif()

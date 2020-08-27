@@ -25,7 +25,7 @@ Status NpuSoftmaxLayer::Convert() {
     auto param = dynamic_cast<SoftmaxLayerParam *>(param_);
     CHECK_PARAM_NULL(param);
 
-    auto output = std::make_shared<ge::op::Softmax>(outputs_name_[0]);
+    auto output = std::make_shared<hiai::op::Softmax>(outputs_name_[0]);
     output->set_input_x(*input_ops_[0]->GetOperator());
     output->set_attr_axis(param->axis);
     ADD_OUTPUT_OP(output)

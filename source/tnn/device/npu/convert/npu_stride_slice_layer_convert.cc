@@ -62,7 +62,7 @@ Status NpuStridedSliceLayer::Convert() {
     weight_ops_.push_back(strides_op);
 
     // stride
-    auto output = std::make_shared<ge::op::StridedSlice>(outputs_name_[0]);
+    auto output = std::make_shared<hiai::op::StridedSlice>(outputs_name_[0]);
     output->set_input_x(*input_ops_[0]->GetOperator());
     output->set_input_begin(*begins_op);
     output->set_input_end(*ends_op);

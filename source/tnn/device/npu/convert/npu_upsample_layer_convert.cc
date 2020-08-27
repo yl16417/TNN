@@ -12,8 +12,7 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the
 // specific language governing permissions and limitations under the License.
 
-#include "graph/attr_value.h"
-#include "graph/op/math_defs.h"
+#include "graph/op/all_ops.h"
 #include "npu_base_layer_convert.h"
 #include "npu_utils.h"
 
@@ -28,10 +27,10 @@ Status NpuUpsampleLayer::Convert() {
     const int scale_h = param->scales[1];
     const int scale_w = param->scales[0];
 
-    auto output = std::make_shared<ge::op::Upsample>(outputs_name_[0]);
+    auto output = std::make_shared<hiai::op::Upsample>(outputs_name_[0]);
     output->set_input_x(*input_ops_[0]->GetOperator());
-    output->set_attr_scale_h(scale_h);
-    output->set_attr_scale_w(scale_w);
+    output->set_attr_stride_h(scale_h);
+    output->set_attr_stride_w(scale_w);
     ADD_OUTPUT_OP(output)
 }
 
