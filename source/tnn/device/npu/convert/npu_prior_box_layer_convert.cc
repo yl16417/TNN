@@ -17,11 +17,11 @@
 //#include "npu_base_layer_convert.h"
 //#include "npu_utils.h"
 //
-//namespace TNN_NS {
+// namespace TNN_NS {
 //
-//DECLARE_NPU_LAYER(PriorBox, LAYER_PRIOR_BOX)
+// DECLARE_NPU_LAYER(PriorBox, LAYER_PRIOR_BOX)
 //
-//Status NpuPriorBoxLayer::Convert() {
+// Status NpuPriorBoxLayer::Convert() {
 //    LOGI("I AM IN PRITOR BOX\n");
 //    // parameter and weight of the PriorBox layer
 //    auto param = dynamic_cast<PriorBoxLayerParam *>(param_);
@@ -50,6 +50,6 @@
 //    ADD_OUTPUT_OP(output)
 //}
 //
-//REGISTER_NPU_LAYER(PriorBox, LAYER_PRIOR_BOX)
+// REGISTER_NPU_LAYER(PriorBox, LAYER_PRIOR_BOX)
 //
 //}  // namespace TNN_NS

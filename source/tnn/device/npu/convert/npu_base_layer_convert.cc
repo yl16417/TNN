@@ -20,15 +20,15 @@ OperatorInfo::OperatorInfo() = default;
 
 OperatorInfo::~OperatorInfo() {}
 
-OperatorInfo::OperatorInfo(std::shared_ptr<ge::Operator> op) {
+OperatorInfo::OperatorInfo(std::shared_ptr<hiai::Operator> op) {
     this->op_ = op;
 }
-OperatorInfo::OperatorInfo(std::shared_ptr<ge::Operator> op, std::vector<int> shape) {
+OperatorInfo::OperatorInfo(std::shared_ptr<hiai::Operator> op, std::vector<int> shape) {
     this->op_    = op;
     this->shape_ = shape;
 }
 
-shared_ptr<ge::Operator> OperatorInfo::GetOperator() {
+shared_ptr<hiai::Operator> OperatorInfo::GetOperator() {
     return op_;
 }
 
@@ -38,7 +38,7 @@ std::vector<int> OperatorInfo::GetShape() {
 void OperatorInfo::SetShape(std::vector<int> shape) {
     this->shape_ = shape;
 }
-void OperatorInfo::SetOperator(std::shared_ptr<ge::Operator> op) {
+void OperatorInfo::SetOperator(std::shared_ptr<hiai::Operator> op) {
     this->op_ = op;
 }
 

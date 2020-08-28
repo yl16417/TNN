@@ -20,9 +20,9 @@
 
 namespace tnn {
 
-Status NpuUtils::CreateAttrValue(shared_ptr<ge::op::Const> attr_value, ge::Shape shape, RawBuffer &raw_buffer) {
-    ge::TensorDesc desc(shape, ge::FORMAT_NCHW, ge::DT_FLOAT);
-    ge::TensorPtr tensor_ptr = std::make_shared<ge::Tensor>();
+Status NpuUtils::CreateAttrValue(shared_ptr<hiai::op::Const> attr_value, hiai::Shape shape, RawBuffer &raw_buffer) {
+    hiai::TensorDesc desc(shape, hiai::FORMAT_NCHW, hiai::DT_FLOAT);
+    hiai::TensorPtr tensor_ptr = std::make_shared<hiai::Tensor>();
 
     tensor_ptr->SetTensorDesc(desc);
     tensor_ptr->SetData(raw_buffer.force_to<uint8_t *>(), raw_buffer.GetBytesSize());
@@ -31,17 +31,17 @@ Status NpuUtils::CreateAttrValue(shared_ptr<ge::op::Const> attr_value, ge::Shape
     return TNN_OK;
 }
 
-Status NpuUtils::CreateInputData(std::shared_ptr<ge::op::Data> &input_data, std::string &input_name,
+Status NpuUtils::CreateInputData(std::shared_ptr<hiai::op::Data> &input_data, std::string &input_name,
                                  DimsVector dims_vector) {
     int n = dims_vector[0];
     int c = dims_vector[1];
     int h = dims_vector[2];
     int w = dims_vector[3];
 
-    ge::Shape data_shape({n, c, h, w});
-    ge::TensorDesc desc(data_shape, ge::FORMAT_NCHW, ge::DT_FLOAT);
+    hiai::Shape data_shape({n, c, h, w});
+    hiai::TensorDesc desc(data_shape, hiai::FORMAT_NCHW, hiai::DT_FLOAT);
 
-    input_data = std::make_shared<ge::op::Data>(input_name);
+    input_data = std::make_shared<hiai::op::Data>(input_name);
     input_data->update_input_desc_x(desc);
     return TNN_OK;
 }

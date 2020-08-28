@@ -23,7 +23,7 @@ namespace TNN_NS {
 DECLARE_NPU_LAYER_WEIGHT(StridedSlice, LAYER_STRIDED_SLICE);
 
 Status NpuStridedSliceLayer::Convert() {
-    auto param    = dynamic_cast<StrideSliceLayerParam *>(param_);
+    auto param = dynamic_cast<StrideSliceLayerParam *>(param_);
     CHECK_PARAM_NULL(param);
 
     std::vector<int> input_shape_vec = input_ops_[0]->GetShape();
@@ -41,23 +41,23 @@ Status NpuStridedSliceLayer::Convert() {
         }
     }
 
-    ge::Shape input_shape({4});
-    ge::TensorDesc desc(input_shape, ge::FORMAT_NCHW, ge::DT_INT32);
+    hiai::Shape input_shape({4});
+    hiai::TensorDesc desc(input_shape, hiai::FORMAT_NCHW, hiai::DT_INT32);
 
     // begins
-    std::shared_ptr<ge::op::Const> begins_op = std::make_shared<ge::op::Const>(layer_name_ + "_begin");
+    std::shared_ptr<hiai::op::Const> begins_op = std::make_shared<hiai::op::Const>(layer_name_ + "_begin");
     NpuUtils::CreateAttrArray(begins_op, begins, desc, 4);
     weight_ops_.push_back(begins_op);
 
     // ends
     // in format nchw
-    std::shared_ptr<ge::op::Const> ends_op = std::make_shared<ge::op::Const>(layer_name_ + "_end");
+    std::shared_ptr<hiai::op::Const> ends_op = std::make_shared<hiai::op::Const>(layer_name_ + "_end");
     NpuUtils::CreateAttrArray(ends_op, ends, desc, 4);
     weight_ops_.push_back(ends_op);
 
     // strides
     // in format nchw
-    std::shared_ptr<ge::op::Const> strides_op = std::make_shared<ge::op::Const>(layer_name_ + "_stride");
+    std::shared_ptr<hiai::op::Const> strides_op = std::make_shared<hiai::op::Const>(layer_name_ + "_stride");
     NpuUtils::CreateAttrArray(strides_op, strides, desc, 4);
     weight_ops_.push_back(strides_op);
 

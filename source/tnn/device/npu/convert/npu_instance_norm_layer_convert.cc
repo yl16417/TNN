@@ -31,15 +31,15 @@ Status NpuInstanceNormLayer::Convert() {
     int input_channel = input_ops_[0]->GetShape()[1];
     // scale
     std::string scale_name = layer_name_ + "_scale";
-    ge::Shape scale_shape({1, input_channel, 1, 1});
-    auto scale = std::make_shared<ge::op::Const>(scale_name);
+    hiai::Shape scale_shape({1, input_channel, 1, 1});
+    auto scale = std::make_shared<hiai::op::Const>(scale_name);
     NpuUtils::CreateAttrValue(scale, scale_shape, resource->scale_handle);
     weight_ops_.push_back(scale);
 
     // bias data
     std::string bias_name = layer_name_ + "_bias";
-    ge::Shape bias_shape({1, input_channel, 1, 1});
-    auto bias_const = std::make_shared<ge::op::Const>(bias_name);
+    hiai::Shape bias_shape({1, input_channel, 1, 1});
+    auto bias_const = std::make_shared<hiai::op::Const>(bias_name);
     NpuUtils::CreateAttrValue(bias_const, bias_shape, resource->bias_handle);
     weight_ops_.push_back(bias_const);
 

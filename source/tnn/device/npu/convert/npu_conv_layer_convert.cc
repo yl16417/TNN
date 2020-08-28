@@ -13,8 +13,6 @@
 // specific language governing permissions and limitations under the License.
 
 #include "graph/attr_value.h"
-#include "graph/op/all_ops.h"
-#include "graph/op/nn_defs.h"
 #include "npu_base_layer_convert.h"
 #include "npu_conv_layer_convert_impl.h"
 #include "npu_utils.h"
@@ -30,48 +28,46 @@ protected:
     virtual Status Convert() {
         Status ret    = ObtainParam();
         auto resource = dynamic_cast<ConvLayerResource *>(resource_);
-        if (ret != TNN_OK){
-           return ret;
+        if (ret != TNN_OK) {
+            return ret;
         }
         if (!resource) {
             return Status(TNNERR_MODEL_ERR, "Error: ConvLayerResource is empty");
         }
 
         // pad mode
-        int pad_mode = 0;
-        ret          = NpuUtils::GetPadMode(pad_mode, pad_type);
+        std::string pad_mode = "SPECIFIC";
+        ret                  = ObtainPadMode(pad_mode, pad_type);
         if (ret != TNN_OK)
             return ret;
 
         // weight
         int total_data_size = resource->filter_handle.GetDataCount();
         int in_group        = total_data_size / (kernel_h * kernel_w * output_channel);
-        ge::Shape weight_shape({output_channel, in_group, kernel_h, kernel_w});
-        auto weight_const = std::make_shared<ge::op::Const>(layer_name_ + "_weight");
+        hiai::Shape weight_shape({output_channel, in_group, kernel_h, kernel_w});
+        auto weight_const = std::make_shared<hiai::op::Const>(layer_name_ + "_weight");
         NpuUtils::CreateAttrValue(weight_const, weight_shape, resource->filter_handle);
         weight_ops_.push_back(weight_const);
 
-        auto output = std::make_shared<ge::op::Convolution>(outputs_name_[0]);
+        auto output = std::make_shared<hiai::op::Convolution>(outputs_name_[0]);
         output->set_input_x(*input_ops_[0]->GetOperator());
-        output->set_input_w(*weight_const);
+        output->set_input_filter(*weight_const);
         // Init bias
         int bias_count = resource->bias_handle.GetDataCount();
         // check bias
         if (bias_count != 0) {
             // bias
-            ge::Shape bias_shape({1, bias_count, 1, 1});
-            auto bias_const = std::make_shared<ge::op::Const>(layer_name_ + "_bias");
+            hiai::Shape bias_shape({1, bias_count, 1, 1});
+            auto bias_const = std::make_shared<hiai::op::Const>(layer_name_ + "_bias");
             NpuUtils::CreateAttrValue(bias_const, bias_shape, resource->bias_handle);
             weight_ops_.push_back(bias_const);
-            output->set_input_b(*bias_const);
+            output->set_input_bias(*bias_const);
         }
-        output->set_attr_kernel(ge::AttrValue::LIST_INT({kernel_h, kernel_w}));
-        output->set_attr_stride(ge::AttrValue::LIST_INT({stride_h, stride_w}));
-        output->set_attr_dilation(ge::AttrValue::LIST_INT({dilation_h, dilation_w}));
-        output->set_attr_group(group);
-        output->set_attr_pad(ge::AttrValue::LIST_INT({pad_h_begin, pad_h_end, pad_w_begin, pad_w_end}));
-        output->set_attr_pad_mode(pad_mode);
-        output->set_attr_num_output(output_channel);
+        output->set_attr_strides(hiai::AttrValue::LIST_INT({stride_h, stride_w}));
+        output->set_attr_dilations(hiai::AttrValue::LIST_INT({dilation_h, dilation_w}));
+        output->set_attr_pads(hiai::AttrValue::LIST_INT({pad_h_begin, pad_h_end, pad_w_begin, pad_w_end}));
+        output->set_attr_groups(group);
+        output->set_attr_pad_mode(hiai::AttrValue::STR(pad_mode));
 
         ADD_OUTPUT_OP(output)
     }

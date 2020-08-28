@@ -28,12 +28,12 @@ public:
 
 protected:
     virtual Status Convert() {
-        Status ret    = ObtainParam();
-        if (ret != TNN_OK){
+        Status ret = ObtainParam();
+        if (ret != TNN_OK) {
             return ret;
         }
         auto resource = dynamic_cast<ConvLayerResource *>(resource_);
-        if( !resource) {
+        if (!resource) {
             return Status(TNNERR_MODEL_ERR, "Error: DeConvLayerResource is empty");
         }
         if (resource->bias_handle.GetDataCount() > 0) {
@@ -43,15 +43,15 @@ protected:
 
         // build now
         const int input_channel = input_ops_[0]->GetShape()[1];
-        int pad_mode            = 0;
-        ret                     = NpuUtils::GetPadMode(pad_mode, pad_type);
+        std::string pad_mode    = "SPECIFIC";
+        ret                     = ObtainPadMode(pad_mode, pad_type);
         if (ret != TNN_OK)
             return ret;
 
         // filter
         int filter_channel = (resource->filter_handle.GetDataCount() / (kernel_h * kernel_w * input_channel));
-        ge::Shape filter_shape({input_channel, filter_channel, kernel_h, kernel_w});
-        auto filter_const = std::make_shared<ge::op::Const>(layer_name_ + "filter");
+        hiai::Shape filter_shape({input_channel, filter_channel, kernel_h, kernel_w});
+        auto filter_const = std::make_shared<hiai::op::Const>(layer_name_ + "filter");
         NpuUtils::CreateAttrValue(filter_const, filter_shape, resource->filter_handle);
         weight_ops_.push_back(filter_const);
         // calculate deconv output shape
@@ -61,26 +61,18 @@ protected:
             return ret;
         }
 
-        // input size
-        std::shared_ptr<ge::op::Const> input_size_const = std::make_shared<ge::op::Const>(layer_name_ + "_input_size");
-        ge::TensorDesc desc(ge::Shape({4}), ge::FORMAT_NCHW, ge::DT_INT32);
-        NpuUtils::CreateAttrArray(input_size_const, calculate_shape, desc, 4);
-        weight_ops_.push_back(input_size_const);
-        auto output = std::make_shared<ge::op::Deconvolution>(outputs_name_[0]);
-        output->set_input_input_sizes(*input_size_const);
+        auto output = std::make_shared<hiai::op::ConvTranspose>(outputs_name_[0]);
         output->set_input_filter(*filter_const);
         output->set_input_x(*input_ops_[0]->GetOperator());
-        output->set_attr_group(group);
-        output->set_attr_num_output(output_channel);
-        output->set_attr_pad(ge::AttrValue::LIST_INT({
+        output->set_attr_strides(hiai::AttrValue::LIST_INT({stride_h, stride_w}));
+        output->set_attr_groups(group);
+        output->set_attr_pads(hiai::AttrValue::LIST_INT({
             pad_h_begin,
             pad_h_end,
             pad_w_begin,
             pad_w_end,
         }));
-        output->set_attr_pad_mode(pad_mode);
-        output->set_attr_stride(ge::AttrValue::LIST_INT({stride_h, stride_w}));
-        output->set_attr_dilation(ge::AttrValue::LIST_INT({dilation_h, dilation_w}));
+        output->set_attr_dilations(hiai::AttrValue::LIST_INT({dilation_h, dilation_w}));
 
         std::shared_ptr<OperatorInfo> output_op = std::make_shared<OperatorInfo>(output, calculate_shape);
         output_ops_.push_back(output_op);

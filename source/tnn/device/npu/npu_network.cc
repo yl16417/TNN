@@ -145,7 +145,7 @@ Status NpuNetwork::Init(NetworkConfig &net_config, ModelConfig &model_config, Ab
     if (from_path_) {
         model_mem_buffer = model_builder->InputMemBufferCreate(model_path);
     } else {
-        ge::Model model(model_name_, model_name_ + "_v1");
+        hiai::Model model(model_name_, model_name_ + "_v1");
         model.SetGraph(graph_);
         bool build_ret = ir_build.CreateModelBuff(model, build_mem_buff);
         if (!build_ret) {
@@ -351,7 +351,7 @@ Status NpuNetwork::CreateGraphInputs(InputShapesMap &input_shape_map) {
     // init graph input
     auto iterator = input_shape_map.begin();
     for (; iterator != input_shape_map.end(); iterator++) {
-        shared_ptr<ge::op::Data> input_data;
+        shared_ptr<hiai::op::Data> input_data;
         std::string input_name           = iterator->first;
         DimsVector dims_vector           = iterator->second;
         ret                              = NpuUtils::CreateInputData(input_data, input_name, dims_vector);
@@ -364,8 +364,8 @@ Status NpuNetwork::CreateGraphInputs(InputShapesMap &input_shape_map) {
 
 Status NpuNetwork::SetGraphInputsAndOutputs(InputShapesMap &input_shape_map, InputShapesMap &cpu_input_shape_map) {
     // init graph input
-    std::vector<ge::Operator> input_ops;
-    std::vector<ge::Operator> output_ops;
+    std::vector<hiai::Operator> input_ops;
+    std::vector<hiai::Operator> output_ops;
     auto iterator = input_shape_map.begin();
     for (; iterator != input_shape_map.end(); iterator++) {
         std::string input_name = iterator->first;
@@ -392,7 +392,7 @@ Status NpuNetwork::SetGraphInputsAndOutputs(InputShapesMap &input_shape_map, Inp
 
 Status NpuNetwork::BuildModel(std::string model_path) {
     // Set model parameters : model name and  model name + version
-    ge::Model model(model_name_, model_name_ + "_v1");
+    hiai::Model model(model_name_, model_name_ + "_v1");
     model.SetGraph(graph_);
     // Build the ir model
     domi::HiaiIrBuild ir_build;

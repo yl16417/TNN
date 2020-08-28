@@ -19,8 +19,8 @@
 #include <tnn/interpreter/layer_resource.h>
 #include <tnn/interpreter/raw_buffer.h>
 
+#include "graph/op/all_ops.h"
 #include "graph/op/array_defs.h"
-#include "graph/compatible/all_ops.h"
 #include "graph/operator.h"
 #include "hiai_ir_build.h"
 #include "tnn/core/common.h"
@@ -31,16 +31,16 @@ namespace TNN_NS {
 
 class NpuUtils {
 public:
-    static Status CreateInputData(std::shared_ptr<ge::op::Data> &input_data, std::string &input_name,
+    static Status CreateInputData(std::shared_ptr<hiai::op::Data> &input_data, std::string &input_name,
                                   DimsVector dims_vector);
 
-    static Status CreateAttrValue(shared_ptr<ge::op::Const> attr_value, ge::Shape shape, RawBuffer &raw_buffer);
+    static Status CreateAttrValue(shared_ptr<hiai::op::Const> attr_value, hiai::Shape shape, RawBuffer &raw_buffer);
 
     template <class T>
-    static Status CreateAttrArray(std::shared_ptr<ge::op::Const> &attr_value, std::vector<T> data,
-                                  ge::TensorDesc input_desc, int shape) {
-        ge::AttrValue::TENSOR input_size_tensor = std::make_shared<ge::Tensor>(input_desc);
-        input_size_tensor->SetData((uint8_t *)data.data(), sizeof(T) * shape);
+    static Status CreateAttrArray(std::shared_ptr<hiai::op::Const> &attr_value, std::vector<T> data,
+                                  hiai::TensorDesc input_desc, int shape_total) {
+        hiai::AttrValue::TENSOR input_size_tensor = std::make_shared<hiai::Tensor>(input_desc);
+        input_size_tensor->SetData((uint8_t *)data.data(), sizeof(T) * shape_total);
         attr_value->set_attr_value(input_size_tensor);
         return TNN_OK;
     }

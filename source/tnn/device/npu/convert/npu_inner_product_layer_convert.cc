@@ -31,20 +31,20 @@ Status NpuInnerProductLayer::Convert() {
     // weight
     vector<int> input_shape = input_ops_[0]->GetShape();
     std::string weight_name = layer_name_ + "_weight";
-    ge::Shape weight_shape({param->num_output, input_shape[1], 1, 1});
-    auto weight_const = std::make_shared<ge::op::Const>(weight_name);
+    hiai::Shape weight_shape({param->num_output, input_shape[1], 1, 1});
+    auto weight_const = std::make_shared<hiai::op::Const>(weight_name);
     NpuUtils::CreateAttrValue(weight_const, weight_shape, resource->weight_handle);
     weight_ops_.push_back(weight_const);
 
     // bias
-    auto output = std::make_shared<ge::op::FullConnection>(outputs_name_[0]);
+    auto output = std::make_shared<hiai::op::FullyConnection>(outputs_name_[0]);
     output->set_input_x(*input_ops_[0]->GetOperator());
     output->set_input_w(*weight_const);
     int bias_count = resource->bias_handle.GetDataCount();
     if (param->has_bias) {
         std::string bias_name = layer_name_ + "_bias";
-        ge::Shape bias_shape({1, bias_count, 1, 1});
-        auto bias_const = std::make_shared<ge::op::Const>(bias_name);
+        hiai::Shape bias_shape({1, bias_count, 1, 1});
+        auto bias_const = std::make_shared<hiai::op::Const>(bias_name);
         NpuUtils::CreateAttrValue(bias_const, bias_shape, resource->bias_handle);
         weight_ops_.push_back(bias_const);
         output->set_input_b(*bias_const);

@@ -23,7 +23,6 @@
 
 #include "graph/attr_value.h"
 #include "graph/op/all_ops.h"
-#include "graph/compatible/all_ops.h"
 #include "tnn/core/abstract_device.h"
 #include "tnn/core/blob.h"
 #include "tnn/core/context.h"
@@ -37,18 +36,18 @@ namespace TNN_NS {
 class OperatorInfo {
 public:
     OperatorInfo();
-    explicit OperatorInfo(std::shared_ptr<ge::Operator> op);
-    OperatorInfo(std::shared_ptr<ge::Operator> op, vector<int> shape);
+    explicit OperatorInfo(std::shared_ptr<hiai::Operator> op);
+    OperatorInfo(std::shared_ptr<hiai::Operator> op, vector<int> shape);
 
     virtual ~OperatorInfo();
 
-    shared_ptr<ge::Operator> GetOperator();
+    shared_ptr<hiai::Operator> GetOperator();
     std::vector<int> GetShape();
     void SetShape(vector<int> shape);
-    void SetOperator(std::shared_ptr<ge::Operator> op);
+    void SetOperator(std::shared_ptr<hiai::Operator> op);
 
 private:
-    std::shared_ptr<ge::Operator> op_;
+    std::shared_ptr<hiai::Operator> op_;
     std::vector<int> shape_;
 };
 
@@ -147,7 +146,7 @@ NpuBaseLayer *CreateNpuBaseLayer(LayerType type);
                                                                                                                        \
     protected:                                                                                                         \
         virtual Status Convert();                                                                                      \
-        std::vector<std::shared_ptr<ge::Operator>> weight_ops_;                                                        \
+        std::vector<std::shared_ptr<hiai::Operator>> weight_ops_;                                                      \
     };
 
 #define REGISTER_NPU_LAYER(type_string, layer_type)                                                                    \

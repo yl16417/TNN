@@ -47,9 +47,9 @@ Status NpuReduceSumLayer::Convert() {
     }
 
     int reduce_size = axes.size();
-    ge::Shape weight_shape({reduce_size});
-    ge::TensorDesc desc(weight_shape, ge::FORMAT_NCHW, ge::DT_INT32);
-    std::shared_ptr<ge::op::Const> axes_op = std::make_shared<ge::op::Const>(layer_name_ + "_axes");
+    hiai::Shape weight_shape({reduce_size});
+    hiai::TensorDesc desc(weight_shape, hiai::FORMAT_NCHW, hiai::DT_INT32);
+    std::shared_ptr<hiai::op::Const> axes_op = std::make_shared<hiai::op::Const>(layer_name_ + "_axes");
     NpuUtils::CreateAttrArray(axes_op, axes, desc, reduce_size);
     weight_ops_.push_back(axes_op);
 

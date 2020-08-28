@@ -29,7 +29,7 @@ public:
 
 protected:
     Status ObtainParam() {
-        auto param = dynamic_cast<ConvLayerParam *>(param_);
+        auto param = dynamic_cast<ConvLayerParam*>(param_);
         CHECK_PARAM_NULL(param);
         stride_w = param->strides[0];
         stride_h = param->strides[1];
@@ -49,7 +49,24 @@ protected:
 
         return TNN_OK;
     }
-    std::vector<shared_ptr<ge::Operator>> weight_ops_;
+    Status ObtainPadMode(std::string& pad_mode, int pad_type) {
+        if (pad_type == 0) {
+            // pad_type : SAME_UPPER or SAME_LOWER
+            // pad_mode : SAME
+            pad_mode = "SAME";
+        } else if (pad_type == 1) {
+            // pad_type : VALID
+            // pad_mode : VALID 5
+            pad_mode = "VALID";
+        } else if (pad_type == -1) {
+            // pad_type : NOSET
+            pad_mode = "SPECIFIC";
+        } else {
+            return Status(TNNERR_PARAM_ERR, "Error: ConvLayer dont support pad type");
+        }
+        return TNN_OK;
+    }
+    std::vector<shared_ptr<hiai::Operator>> weight_ops_;
     int stride_w;
     int stride_h;
 

@@ -17,14 +17,14 @@
 //#include "graph/op/nn_defs.h"
 //#include "npu_utils.h"
 //
-//namespace TNN_NS {
+// namespace TNN_NS {
 //
-//Status NpuDetectionOutputLayer::SetInputShape(InputShapesMap input_shapes_map) {
+// Status NpuDetectionOutputLayer::SetInputShape(InputShapesMap input_shapes_map) {
 //    input_shapes_map_ = input_shapes_map;
 //    return TNN_OK;
 //}
 //
-//Status NpuDetectionOutputLayer::Convert() {
+// Status NpuDetectionOutputLayer::Convert() {
 //    // parameter and weight of the DetectionOutput layer
 //    auto param = dynamic_cast<DetectionOutputLayerParam *>(param_);
 //    CHECK_PARAM_NULL(param);
@@ -57,5 +57,5 @@
 //
 //    ADD_OUTPUT_OP(output)
 //}
-//REGISTER_NPU_LAYER(DetectionOutput, LAYER_DETECTION_OUTPUT)
+// REGISTER_NPU_LAYER(DetectionOutput, LAYER_DETECTION_OUTPUT)
 //}  // namespace TNN_NS

@@ -25,6 +25,7 @@ DECLARE_NPU_LAYER_WEIGHT(LRN, LAYER_LRN)
 Status NpuLRNLayer::Convert() {
     auto param = dynamic_cast<LRNLayerParam*>(param_);
     CHECK_PARAM_NULL(param);
+    CHECK_PARAM_NULL(param);
 
     float alpha = param->alpha;
     float beta  = param->beta;

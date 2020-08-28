@@ -29,10 +29,11 @@ Status NpuBatchNormLayer::Convert() {
     }
 
     // channel is the 1 element of NCHW
-    int channel             = input_ops_[0]->GetShape()[1];
-    bool share_channel      = resource->scale_handle.GetBytesSize() == DataTypeUtils::GetBytesSize(resource->scale_handle.GetDataType());
-    auto *scale_data        = resource->scale_handle.force_to<float *>();
-    auto *bias_data         = resource->bias_handle.force_to<float *>();
+    int channel = input_ops_[0]->GetShape()[1];
+    bool share_channel =
+        resource->scale_handle.GetBytesSize() == DataTypeUtils::GetBytesSize(resource->scale_handle.GetDataType());
+    auto *scale_data = resource->scale_handle.force_to<float *>();
+    auto *bias_data  = resource->bias_handle.force_to<float *>();
 
     std::vector<float> mean_data;
     std::vector<float> variance_data;
@@ -48,17 +49,17 @@ Status NpuBatchNormLayer::Convert() {
         }
     }
 
-    ge::Shape shape({channel});
-    ge::TensorDesc desc(shape, ge::FORMAT_NCHW, ge::DT_FLOAT);
+    hiai::Shape shape({channel});
+    hiai::TensorDesc desc(shape, hiai::FORMAT_NCHW, hiai::DT_FLOAT);
 
-    auto mean_const = std::make_shared<ge::op::Const>(layer_name_ + "_mean");
+    auto mean_const = std::make_shared<hiai::op::Const>(layer_name_ + "_mean");
     NpuUtils::CreateAttrArray(mean_const, mean_data, desc, channel);
 
-    auto variance_const = std::make_shared<ge::op::Const>(layer_name_ + "_variance");
+    auto variance_const = std::make_shared<hiai::op::Const>(layer_name_ + "_variance");
     NpuUtils::CreateAttrArray(variance_const, variance_data, desc, channel);
 
-    auto scale_const = std::make_shared<ge::op::Const>(layer_name_ + "_scale");
-    auto bias_const  = std::make_shared<ge::op::Const>(layer_name_ + "_bias");
+    auto scale_const = std::make_shared<hiai::op::Const>(layer_name_ + "_scale");
+    auto bias_const  = std::make_shared<hiai::op::Const>(layer_name_ + "_bias");
 
     if (share_channel) {
         NpuUtils::CreateAttrArray(scale_const, share_scale_data, desc, channel);
@@ -73,7 +74,7 @@ Status NpuBatchNormLayer::Convert() {
     weight_ops_.push_back(scale_const);
     weight_ops_.push_back(bias_const);
 
-    auto output = std::make_shared<ge::op::BatchNormExt2>(outputs_name_[0]);
+    auto output = std::make_shared<hiai::op::BNInference>(outputs_name_[0]);
     output->set_input_x(*input_ops_[0]->GetOperator());
     output->set_input_variance(*variance_const);
     output->set_input_mean(*mean_const);

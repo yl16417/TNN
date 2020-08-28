@@ -21,14 +21,14 @@
 //#include "graph/op/nn_defs.h"
 //#include "npu_base_layer_convert.h"
 //#include "npu_utils.h"
-//namespace TNN_NS {
-//class NpuDetectionOutputLayer : public NpuBaseLayer {
-//public:
+// namespace TNN_NS {
+// class NpuDetectionOutputLayer : public NpuBaseLayer {
+// public:
 //    NpuDetectionOutputLayer(LayerType ignore) : NpuBaseLayer(LAYER_DETECTION_OUTPUT){};
 //    virtual ~NpuDetectionOutputLayer(){};
 //    Status SetInputShape(InputShapesMap input_shapes_map);
 //
-//protected:
+// protected:
 //    virtual Status Convert();
 //    // add for detection output
 //    InputShapesMap input_shapes_map_;

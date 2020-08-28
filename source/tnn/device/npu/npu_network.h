@@ -122,7 +122,7 @@ private:
     // map to store the operators corresponding to their names
     std::map<std::string, shared_ptr<OperatorInfo>> global_operator_map_;
     // graph used to build
-    ge::Graph graph_ = ge::Graph("graph");
+    hiai::Graph graph_ = hiai::Graph("graph");
 
     // the boolean controls if build from om or build from memory
     bool from_path_ = true;

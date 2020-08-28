@@ -56,14 +56,14 @@ protected:
             output->set_input_x1(*input_ops_[0]->GetOperator());
             output->set_input_x2(*input_ops_[1]->GetOperator());
         } else {
-            auto weight_const             = std::make_shared<ge::op::Const>(layer_name_ + "_weight");
+            auto weight_const             = std::make_shared<hiai::op::Const>(layer_name_ + "_weight");
             std::vector<int> weight_shape = resource->element_shape;
             std::vector<int> input_shape  = input_ops_[0]->GetShape();
             Status calculate_ret          = NpuUtils::CalculateBroadcastSize(weight_shape, resource, input_shape);
             if (calculate_ret != TNN_OK) {
                 return calculate_ret;
             }
-            ge::Shape weight_shape_op({weight_shape[0], weight_shape[1], weight_shape[2], weight_shape[3]});
+            hiai::Shape weight_shape_op({weight_shape[0], weight_shape[1], weight_shape[2], weight_shape[3]});
             NpuUtils::CreateAttrValue(weight_const, weight_shape_op, resource->element_handle);
             weight_ops_.push_back(weight_const);
 
@@ -81,7 +81,7 @@ protected:
     }
 
 private:
-    std::vector<shared_ptr<ge::Operator>> weight_ops_;
+    std::vector<shared_ptr<hiai::Operator>> weight_ops_;
 };
 
 }  // namespace TNN_NS
