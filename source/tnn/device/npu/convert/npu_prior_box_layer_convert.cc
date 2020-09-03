@@ -17,14 +17,20 @@
 #include "npu_base_layer_convert.h"
 #include "npu_utils.h"
 
- namespace TNN_NS {
+namespace TNN_NS {
 
- DECLARE_NPU_LAYER(PriorBox, LAYER_PRIOR_BOX)
+DECLARE_NPU_LAYER(PriorBox, LAYER_PRIOR_BOX)
 
- Status NpuPriorBoxLayer::Convert() {
+Status NpuPriorBoxLayer::Convert() {
     // parameter and weight of thw=e PriorBox layer
     auto param = dynamic_cast<PriorBoxLayerParam *>(param_);
     CHECK_PARAM_NULL(param);
+    int img_height = param->img_h;
+    int img_width  = param->img_w;
+    if (img_height == 0 || img_width == 0) {
+        img_height = input_ops_[0]->GetShape()[2];
+        img_width  = input_ops_[0]->GetShape()[3];
+    }
 
     auto output = std::make_shared<hiai::op::PriorBox>(outputs_name_[0]);
     output->set_input_x(*input_ops_[0]->GetOperator());
@@ -34,17 +40,16 @@
 
     output->set_attr_flip(param->flip);
     output->set_attr_clip(param->clip);
-     output->set_attr_variance(param->variances);
-
-     output->set_attr_step_h(param->step_h);
-     output->set_attr_step_w(param->step_w);
-     output->set_attr_offset(param->offset);
-     output->set_attr_img_h(param->img_h);
-     output->set_attr_img_w(param->img_w);
+    output->set_attr_variance(param->variances);
+    output->set_attr_step_h(param->step_h);
+    output->set_attr_step_w(param->step_w);
+    output->set_attr_offset(param->offset);
+    output->set_attr_img_h(img_height);
+    output->set_attr_img_w(img_width);
 
     ADD_OUTPUT_OP(output)
 }
 
- REGISTER_NPU_LAYER(PriorBox, LAYER_PRIOR_BOX)
+REGISTER_NPU_LAYER(PriorBox, LAYER_PRIOR_BOX)
 
 }  // namespace TNN_NS

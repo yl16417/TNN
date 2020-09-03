@@ -40,6 +40,9 @@ Status NpuInnerProductLayer::Convert() {
     auto output = std::make_shared<hiai::op::FullyConnection>(outputs_name_[0]);
     output->set_input_x(*input_ops_[0]->GetOperator());
     output->set_input_w(*weight_const);
+    output->set_attr_num_output(param->num_output);
+    output->set_attr_transpose(hiai::AttrValue::BOOL(param->transpose));
+    output->set_attr_axis(param->axis);
     int bias_count = resource->bias_handle.GetDataCount();
     if (param->has_bias) {
         std::string bias_name = layer_name_ + "_bias";

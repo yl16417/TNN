@@ -36,10 +36,10 @@ protected:
         if (!resource) {
             return Status(TNNERR_MODEL_ERR, "Error: DeConvLayerResource is empty");
         }
-        if (resource->bias_handle.GetDataCount() > 0) {
-            LOGE("Current IR deconv does not support bias \n");
-            return Status(TNNERR_LAYER_ERR, "Error: Current IR deconv does not support bias");
-        }
+//        if (resource->bias_handle.GetDataCount() > 0) {
+//            LOGE("Current IR deconv does not support bias \n");
+//            return Status(TNNERR_LAYER_ERR, "Error: Current IR deconv does not support bias");
+//        }
 
         // build now
         const int input_channel = input_ops_[0]->GetShape()[1];
@@ -54,16 +54,32 @@ protected:
         auto filter_const = std::make_shared<hiai::op::Const>(layer_name_ + "filter");
         NpuUtils::CreateAttrValue(filter_const, filter_shape, resource->filter_handle);
         weight_ops_.push_back(filter_const);
-        // calculate deconv output shape
+        // input size
         std::vector<int> calculate_shape;
         ret = NpuBaseLayer::GetOutputShape(0, calculate_shape);
         if (ret != TNN_OK) {
             return ret;
         }
+        std::shared_ptr<hiai::op::Const> input_size_const = std::make_shared<hiai::op::Const>(layer_name_ + "_input_size");
+        ge::TensorDesc desc(ge::Shape({4}), ge::FORMAT_NCHW, ge::DT_INT32);
+        NpuUtils::CreateAttrArray(input_size_const, calculate_shape, desc, 4);
+        weight_ops_.push_back(input_size_const);
 
         auto output = std::make_shared<hiai::op::ConvTranspose>(outputs_name_[0]);
+        output->set_input_output_shape(*input_size_const);
         output->set_input_filter(*filter_const);
         output->set_input_x(*input_ops_[0]->GetOperator());
+        // Init bias
+        int bias_count = resource->bias_handle.GetDataCount();
+        // check bias
+        if (bias_count != 0) {
+            // bias
+            hiai::Shape bias_shape({1, bias_count, 1, 1});
+            auto bias_const = std::make_shared<hiai::op::Const>(layer_name_ + "_bias");
+            NpuUtils::CreateAttrValue(bias_const, bias_shape, resource->bias_handle);
+            weight_ops_.push_back(bias_const);
+            output->set_input_bias(*bias_const);
+        }
         output->set_attr_strides(hiai::AttrValue::LIST_INT({stride_h, stride_w}));
         output->set_attr_groups(group);
         output->set_attr_pads(hiai::AttrValue::LIST_INT({
@@ -73,7 +89,6 @@ protected:
             pad_w_end,
         }));
         output->set_attr_dilations(hiai::AttrValue::LIST_INT({dilation_h, dilation_w}));
-
         std::shared_ptr<OperatorInfo> output_op = std::make_shared<OperatorInfo>(output, calculate_shape);
         output_ops_.push_back(output_op);
         return ret;

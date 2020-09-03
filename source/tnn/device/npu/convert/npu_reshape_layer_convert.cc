@@ -13,8 +13,7 @@
 // specific language governing permissions and limitations under the License.
 
 #include "graph/attr_value.h"
-#include "graph/op/all_ops.h"
-#include "graph/op/nn_defs.h"
+#include "graph/compatible/all_ops.h"
 #include "npu_base_layer_convert.h"
 #include "npu_utils.h"
 
@@ -27,20 +26,23 @@ Status NpuReshapeLayer::Convert() {
     CHECK_PARAM_NULL(param);
 
     // shape
-    std::shared_ptr<hiai::op::Const> shape_const = std::make_shared<hiai::op::Const>(layer_name_ + "_input_size");
-    int shape_count                              = param->shape.size();
-    hiai::TensorDesc desc(hiai::Shape({shape_count}), hiai::FORMAT_NCHW, hiai::DT_INT32);
-    NpuUtils::CreateAttrArray(shape_const, param->shape, desc, shape_count);
-    weight_ops_.push_back(shape_const);
+//    std::shared_ptr<hiai::op::Const> shape_const = std::make_shared<hiai::op::Const>(layer_name_ + "_input_size");
+//    int shape_count                              = param->shape.size();
+//    hiai::TensorDesc desc(hiai::Shape({shape_count}), hiai::FORMAT_NCHW, hiai::DT_INT32);
+//    NpuUtils::CreateAttrArray(shape_const, param->shape, desc, shape_count);
+//    weight_ops_.push_back(shape_const);
+    ge::AttrValue::LIST_INT shape = std::vector<int64_t>(param->shape.begin(), param->shape.end());
 
-    auto output = std::make_shared<hiai::op::Reshape>(outputs_name_[0]);
-    output->set_input_x(*input_ops_[0]->GetOperator());
-    output->set_input_shape(*shape_const);
+    auto output = std::make_shared<ge::op::Reshape>(outputs_name_[0]);
+    output->set_input_tensor(*input_ops_[0]->GetOperator());
+    output->set_attr_shape(shape);
     output->set_attr_axis(param->axis);
     output->set_attr_num_axes(param->num_axes);
+    
     ADD_OUTPUT_OP(output)
 }
 
 REGISTER_NPU_LAYER(Reshape, LAYER_RESHAPE)
+
 
 }  // namespace TNN_NS

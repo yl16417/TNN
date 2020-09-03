@@ -30,7 +30,7 @@ protected:
     Status UnaryConvert() {
         int input_size = input_ops_.size();
         if (input_size >= 2) {
-            printf("the Unary input size is not correct\n");
+            LOGE("the Unary input size is not correct\n");
             return Status(TNNERR_PARAM_ERR, "Error: the Unary layer count is not correct");
         }
         auto output = std::make_shared<T>(outputs_name_[0]);
